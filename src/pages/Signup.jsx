@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { useSignup } from "../hooks/useSignup";
+import { useNavigate } from "react-router-dom";
+
 import {
   Heading,
   Flex,
@@ -7,17 +11,20 @@ import {
   Center,
   Link,
   FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { useState } from "react";
 
-const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { signup, error, isLoading } = useSignup();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await signup(email, password);
 
-    console.log(email, password);
+    console.log(error);
   };
   return (
     <form method="POST" onSubmit={handleSubmit}>
@@ -38,7 +45,7 @@ const Login = () => {
           px={32}
           rounded={6}
         >
-          <Heading mb={12}>Log in</Heading>
+          <Heading mb={12}>Sign up</Heading>
 
           <FormControl>
             <Input
@@ -56,7 +63,7 @@ const Login = () => {
             />
           </FormControl>
 
-          <FormControl>
+          <FormControl isInvalid={error}>
             <Input
               placeholder="*****"
               variant="filled"
@@ -68,10 +75,11 @@ const Login = () => {
               }}
               value={password}
             />
+            <FormErrorMessage>{error}</FormErrorMessage>
           </FormControl>
           <FormControl>
             <Button colorScheme="teal" type="submit" w={"full"} mt={6}>
-              Log in
+              Sign up
             </Button>
           </FormControl>
 
@@ -80,7 +88,10 @@ const Login = () => {
           </Button> */}
           <Center mt={"2"}>
             <Text fontSize={"sm"}>
-              Don't have an account? <Link color={"teal"} href="/signup">Sign up</Link>
+              already signed up?{" "}
+              <Link color={"teal"} href="/">
+                Log in
+              </Link>
             </Text>
           </Center>
         </Flex>
@@ -88,4 +99,4 @@ const Login = () => {
     </form>
   );
 };
-export default Login;
+export default Signup;
