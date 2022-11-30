@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.config";
 import { useNavigate } from "react-router-dom";

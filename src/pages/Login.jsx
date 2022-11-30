@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLogin } from "../hooks/useLogin";
-
+import { useGoogleLogin } from "../hooks/useGoogleLogin";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   Heading,
   Flex,
@@ -11,18 +13,35 @@ import {
   Link,
   FormControl,
   FormErrorMessage,
+  Image,
 } from "@chakra-ui/react";
+import google from "../assets/google.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+
   const { login, error, isLoading } = useLogin();
+  const { googleLogin, errorGoogle, isLoadingGoogle } = useGoogleLogin();
+
+  const handleGoogleLogin = async () => {
+    await googleLogin();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await login(email, password);
   };
+
+  useEffect(() => {
+    if (user != null) {
+      navigate("/account");
+    }
+  }, [user]);
+
   return (
     <form method="POST" onSubmit={handleSubmit}>
       <Flex
@@ -80,9 +99,15 @@ const Login = () => {
             </Button>
           </FormControl>
 
-          {/* <Button mt={4} border="1px" borderColor={"gray.500"}>
+          <Button
+            leftIcon={<Image w={4} src={google} />}
+            mt={4}
+            border="1px"
+            borderColor={"gray.500"}
+            onClick={handleGoogleLogin}
+          >
             Sign in with Google
-          </Button> */}
+          </Button>
           <Center mt={"2"}>
             <Text fontSize={"sm"}>
               already signed up?{" "}
