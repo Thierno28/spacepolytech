@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
+
 import {
   Heading,
   Flex,
@@ -7,17 +10,18 @@ import {
   Center,
   Link,
   FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react";
-import { useState } from "react";
 
 const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login, error, isLoading } = useLogin();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(email, password);
+    await login(email, password);
   };
   return (
     <form method="POST" onSubmit={handleSubmit}>
@@ -56,7 +60,7 @@ const Login = () => {
             />
           </FormControl>
 
-          <FormControl>
+          <FormControl isInvalid={error}>
             <Input
               placeholder="*****"
               variant="filled"
@@ -68,6 +72,7 @@ const Login = () => {
               }}
               value={password}
             />
+            <FormErrorMessage>{error}</FormErrorMessage>
           </FormControl>
           <FormControl>
             <Button colorScheme="teal" type="submit" w={"full"} mt={6}>
@@ -80,7 +85,10 @@ const Login = () => {
           </Button> */}
           <Center mt={"2"}>
             <Text fontSize={"sm"}>
-              Don't have an account? <Link color={"teal"} href="/signup">Sign up</Link>
+              already signed up?{" "}
+              <Link color={"teal"} href="/signup">
+                Sign up
+              </Link>
             </Text>
           </Center>
         </Flex>
